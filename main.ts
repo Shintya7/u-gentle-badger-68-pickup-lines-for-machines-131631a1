@@ -29,6 +29,13 @@ export function validateLine(line: string): void {
   if (/[\r\n]/.test(line)) {
     throw new Error("pickup line must be a single line");
   }
+  // Control characters would corrupt the judged text, and a pickup line needs at least three words to land.
+  if (/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(line)) {
+    throw new Error("pickup line must not contain control characters");
+  }
+  if (line.trim().split(/\s+/).length < 3) {
+    throw new Error("pickup line must contain at least three words");
+  }
   if (!/[A-Za-z]/.test(line)) {
     throw new Error("pickup line must contain letters");
   }
